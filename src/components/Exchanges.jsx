@@ -11,9 +11,10 @@ const { Panel } = Collapse;
 
 const Exchanges = () => {
   const { data, isFetching } = useGetExchangesQuery();
-  const exchangesList = data?.data?.exchanges;
-  // Note: To access this endpoint you need premium plan
+  const exchangesList = data?.data?.exchanges; // ✅ sửa lỗi này
+
   if (isFetching) return <Loader />;
+  if (!exchangesList) return <p>No exchange data available.</p>; // ✅ tránh .map lỗi
 
   return (
     <>
@@ -25,13 +26,13 @@ const Exchanges = () => {
       </Row>
       <Row>
         {exchangesList.map((exchange) => (
-          <Col span={24}>
+          <Col span={24} key={exchange.uuid}>
             <Collapse>
               <Panel
                 key={exchange.uuid}
                 showArrow={false}
                 header={(
-                  <Row key={exchange.uuid}>
+                  <Row>
                     <Col span={6}>
                       <Text><strong>{exchange.rank}.</strong></Text>
                       <Avatar className="exchange-image" src={exchange.iconUrl} />
